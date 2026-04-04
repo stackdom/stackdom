@@ -36,6 +36,10 @@ const TOOL_FIELDS = `
     question,
     answer
   },
+  why_it_works,
+  who_is_this_for,
+  when_to_use,
+  when_not_to_use,
   featured
 `;
 

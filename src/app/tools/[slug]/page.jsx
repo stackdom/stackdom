@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Check, X, ExternalLink, ArrowRight, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { ArrowLeft, Check, X, ExternalLink, ArrowRight, ChevronDown, ChevronUp, Layers, Users, Lightbulb, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getToolBySlug, getAllTools, getAllStacks, getAllComparisons } from '@/lib/sanity';
@@ -263,6 +263,78 @@ export default function ToolDetail() {
               <p className="text-xs text-muted-foreground mt-3">
                 Pricing may vary. <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Check {tool.name} website</a> for current plans.
               </p>
+            )}
+          </div>
+        )}
+
+        {tool.why_it_works && (
+          <div className="p-6 rounded-2xl bg-foreground text-background relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.25),transparent_60%)]" />
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-3">
+                <Check className="w-5 h-5 text-primary" />
+                <span className="text-xs font-semibold uppercase tracking-wider opacity-60">Why it works</span>
+              </div>
+              <p className="text-base leading-relaxed opacity-85">{tool.why_it_works}</p>
+            </div>
+          </div>
+        )}
+
+        {(tool.who_is_this_for?.length > 0 || tool.when_to_use?.length > 0 || tool.when_not_to_use?.length > 0) && (
+          <div className="grid md:grid-cols-3 gap-5">
+            {tool.who_is_this_for?.length > 0 && (
+              <div className="p-6 rounded-2xl bg-secondary/40 border border-border">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-primary" />
+                  </div>
+                  <h2 className="font-semibold text-sm">Who it's for</h2>
+                </div>
+                <ul className="space-y-2.5">
+                  {tool.who_is_this_for.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {tool.when_to_use?.length > 0 && (
+              <div className="p-6 rounded-2xl bg-accent/50 border border-primary/10">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Lightbulb className="w-4 h-4 text-primary" />
+                  </div>
+                  <h2 className="font-semibold text-sm">When to use it</h2>
+                </div>
+                <ul className="space-y-2.5">
+                  {tool.when_to_use.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {tool.when_not_to_use?.length > 0 && (
+              <div className="p-6 rounded-2xl bg-destructive/5 border border-destructive/10">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-destructive" />
+                  </div>
+                  <h2 className="font-semibold text-sm">When NOT to use it</h2>
+                </div>
+                <ul className="space-y-2.5">
+                  {tool.when_not_to_use.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         )}
