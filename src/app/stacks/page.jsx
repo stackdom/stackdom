@@ -83,7 +83,7 @@ export default function Stacks() {
             description="Find the perfect stack tailored to what you want to accomplish."
             center={true}
           />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {goalStacks.map(stack => {
               const iconMap = { traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick, closesales: DollarSign, customers: Users, automate: Zap, website: Globe, email: Mail, analytics: BarChart2, payments: CreditCard, support: Headphones, content: PenLine };
               const Icon = iconMap[stack.slug?.replace(/-/g, '')] || Zap;

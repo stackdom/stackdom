@@ -50,7 +50,7 @@ export default function Home() {
                 <Zap className="w-3 h-3" /> Smart stack recommendations
               </span>
             </motion.div>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
+            <motion.h1 variants={fadeUp} className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
               Build a growth stack<br />
               <span className="text-primary">that actually works</span>
             </motion.h1>
