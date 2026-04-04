@@ -1,0 +1,118 @@
+{
+  "name": "Goal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "slug": {
+      "type": "string",
+      "title": "Slug"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "icon": {
+      "type": "string",
+      "title": "Icon Name (lucide-react)"
+    },
+    "quick_summary": {
+      "type": "string",
+      "title": "Quick Summary"
+    },
+    "overview_problem": {
+      "type": "string",
+      "title": "Overview - Problem"
+    },
+    "overview_solution": {
+      "type": "string",
+      "title": "Overview - Solution"
+    },
+    "overview_how_it_works": {
+      "type": "string",
+      "title": "Overview - How It Works"
+    },
+    "overview_use_cases": {
+      "type": "string",
+      "title": "Overview - Use Cases"
+    },
+    "overview_tradeoff": {
+      "type": "string",
+      "title": "Overview - Trade off"
+    },
+    "steps": {
+      "type": "array",
+      "title": "Steps",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Step Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Step Description"
+          },
+          "tools": {
+            "type": "array",
+            "title": "Tools for this step",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "recommended_tools": {
+      "type": "array",
+      "title": "Recommended Tool Names",
+      "items": {
+        "type": "string"
+      }
+    },
+    "why_this_works": {
+      "type": "string",
+      "title": "Why This Works"
+    },
+    "who_is_this_for": {
+      "type": "array",
+      "title": "Who This Is For",
+      "items": {
+        "type": "string"
+      }
+    },
+    "when_to_use": {
+      "type": "array",
+      "title": "When To Use",
+      "items": {
+        "type": "string"
+      }
+    },
+    "when_not_to_use": {
+      "type": "array",
+      "title": "When NOT To Use",
+      "items": {
+        "type": "string"
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "title": "Alternative Approaches",
+      "items": {
+        "type": "string"
+      }
+    },
+    "estimated_monthly_cost": {
+      "type": "string",
+      "title": "Estimated Monthly Cost"
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "description"
+  ]
+}
