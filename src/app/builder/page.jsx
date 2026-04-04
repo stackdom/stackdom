@@ -170,11 +170,15 @@ export default function StackBuilder() {
                   className="p-6 rounded-2xl bg-card border border-border"
                 >
                   <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider">{tool.category}</span>
-                      <h3 className="text-lg font-semibold mt-1">{tool.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
-                      <p className="text-sm text-muted-foreground mt-2 italic">"{tool.reason}"</p>
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="shrink-0 mt-1">
+                        <ToolIcon slug={tool.slug} name={tool.name} size="sm" websiteUrl={tool.website_url} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-semibold text-primary uppercase tracking-wider">{tool.category}</span>
+                        <h3 className="text-lg font-semibold mt-1">{tool.name}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0 ml-4">
                       {tool.monthly_price != null && (

@@ -145,6 +145,82 @@ export async function getPlaybookBySlug(slug: string) {
   );
 }
 
+// Comparisons
+const COMPARISON_LIST_FIELDS = `
+  "id": _id,
+  "slug": coalesce(slug.current, slug),
+  tool_a_slug,
+  tool_b_slug,
+  quick_summary,
+  featured
+`;
+
+const COMPARISON_DETAIL_FIELDS = `
+  "id": _id,
+  "slug": coalesce(slug.current, slug),
+  tool_a_slug,
+  tool_b_slug,
+  quick_summary,
+  overview,
+  "key_difference": {
+    "a": key_difference_a,
+    "b": key_difference_b
+  },
+  "side_by_side": {
+    "a": side_by_side_a,
+    "b": side_by_side_b
+  },
+  "how_they_differ": {
+    "a": how_they_differ_a[] { label, text },
+    "b": how_they_differ_b[] { label, text }
+  },
+  "choose_if": {
+    "a": choose_if_a,
+    "b": choose_if_b
+  },
+  "who_for": {
+    "a": who_for_a,
+    "b": who_for_b
+  },
+  final_verdict,
+  "faqs": faqs[] { q, a },
+  featured
+`;
+
+export async function getAllComparisons() {
+  return client.fetch(
+    `*[_type == "comparison"] | order(_createdAt desc) { ${COMPARISON_LIST_FIELDS} }`
+  );
+}
+
+export async function getComparisonBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "comparison" && (slug.current == $slug || slug == $slug)][0] { ${COMPARISON_DETAIL_FIELDS} }`,
+    { slug }
+  );
+}
+
+// Site Settings
+export async function getSiteSettings() {
+  return client.fetch(
+    `*[_type == "siteSettings"][0] { tagline }`
+  );
+}
+
+// Legal pages
+export async function getLegalPage(slug: string) {
+  return client.fetch(
+    `*[_type == "legalPage" && (slug.current == $slug || slug == $slug)][0] {
+      "id": _id,
+      "slug": coalesce(slug.current, slug),
+      title,
+      content,
+      lastUpdated
+    }`,
+    { slug }
+  );
+}
+
 // Goals
 export async function getAllGoals() {
   return client.fetch(

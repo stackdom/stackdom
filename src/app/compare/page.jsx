@@ -6,33 +6,31 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SectionHeading from '@/components/SectionHeading';
 import ToolIcon from '@/components/ToolIcon';
-import { COMPARISONS } from '@/data/comparisons';
-import { getAllTools } from '@/lib/sanity';
+import { getAllComparisons, getAllTools } from '@/lib/sanity';
 
 export default function Compare() {
-  const [toolMap, setToolMap] = useState({});
+  const [pairings, setPairings] = useState([]);
 
   useEffect(() => {
-    getAllTools().then(tools => {
-      const map = {};
-      tools.forEach(t => { map[t.slug] = t; });
-      setToolMap(map);
+    Promise.all([getAllComparisons(), getAllTools()]).then(([comparisons, tools]) => {
+      const toolMap = Object.fromEntries(tools.map(t => [t.slug, t]));
+      setPairings(comparisons.map(c => {
+        const tA = toolMap[c.tool_a_slug];
+        const tB = toolMap[c.tool_b_slug];
+        return {
+          key: c.slug,
+          slugA: c.tool_a_slug,
+          slugB: c.tool_b_slug,
+          nameA: tA?.name || c.tool_a_slug,
+          nameB: tB?.name || c.tool_b_slug,
+          category: tA?.category || '',
+          blurb: c.quick_summary?.split('.')[0] || '',
+          websiteA: tA?.website_url,
+          websiteB: tB?.website_url,
+        };
+      }));
     });
   }, []);
-
-  const pairings = Object.keys(COMPARISONS).map(key => {
-    const [slugA, slugB] = key.split('-vs-');
-    const tA = toolMap[slugA];
-    const tB = toolMap[slugB];
-    return {
-      key,
-      slugA, slugB,
-      nameA: tA?.name || slugA,
-      nameB: tB?.name || slugB,
-      category: tA?.category || '',
-      blurb: COMPARISONS[key].quick_summary?.split('.')[0] || '',
-    };
-  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -50,9 +48,9 @@ export default function Compare() {
             className="group p-6 rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
           >
             <div className="flex items-center gap-3 mb-4">
-              <ToolIcon slug={pair.slugA} name={pair.nameA} size="sm" />
+              <ToolIcon slug={pair.slugA} name={pair.nameA} size="sm" websiteUrl={pair.websiteA} />
               <span className="text-xs font-medium text-muted-foreground">vs</span>
-              <ToolIcon slug={pair.slugB} name={pair.nameB} size="sm" />
+              <ToolIcon slug={pair.slugB} name={pair.nameB} size="sm" websiteUrl={pair.websiteB} />
             </div>
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{pair.category}</p>
             <h3 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors">{pair.nameA} vs {pair.nameB}</h3>

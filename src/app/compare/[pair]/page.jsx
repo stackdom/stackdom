@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, X, Target, Users, Zap, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getToolBySlug, getAllStacks } from '@/lib/sanity';
+import { getToolBySlug, getAllStacks, getComparisonBySlug } from '@/lib/sanity';
 import ToolIcon from '@/components/ToolIcon';
-import { COMPARISONS } from '@/data/comparisons';
 
 function FAQ({ question, answer }) {
   const [open, setOpen] = useState(false);
@@ -34,26 +33,27 @@ export default function CompareDetail() {
   const { pair } = useParams();
   const [toolA, setToolA] = useState(null);
   const [toolB, setToolB] = useState(null);
+  const [content, setContent] = useState(null);
   const [relatedStacks, setRelatedStacks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const content = COMPARISONS[pair] || null;
-
   useEffect(() => {
-    const parts = pair?.split('-vs-');
-    if (!parts || parts.length !== 2) { setLoading(false); return; }
-    const [slugA, slugB] = parts;
-    Promise.all([
-      getToolBySlug(slugA),
-      getToolBySlug(slugB),
-      getAllStacks(),
-    ]).then(([tA, tB, stacks]) => {
-      setToolA(tA || null);
-      setToolB(tB || null);
-      if (tA && tB) {
-        setRelatedStacks(stacks.filter(s => (s.tools || []).includes(tA.name) || (s.tools || []).includes(tB.name)).slice(0, 4));
-      }
-      setLoading(false);
+    if (!pair) { setLoading(false); return; }
+    getComparisonBySlug(pair).then(comparison => {
+      if (!comparison) { setLoading(false); return; }
+      setContent(comparison);
+      Promise.all([
+        getToolBySlug(comparison.tool_a_slug),
+        getToolBySlug(comparison.tool_b_slug),
+        getAllStacks(),
+      ]).then(([tA, tB, stacks]) => {
+        setToolA(tA || null);
+        setToolB(tB || null);
+        if (tA && tB) {
+          setRelatedStacks(stacks.filter(s => (s.tools || []).includes(tA.name) || (s.tools || []).includes(tB.name)).slice(0, 4));
+        }
+        setLoading(false);
+      });
     });
   }, [pair]);
 
@@ -132,7 +132,7 @@ export default function CompareDetail() {
                   <ToolIcon slug={tool.slug} name={tool.name} size="sm" />
                   <h3 className="font-semibold">{tool.name}</h3>
                 </div>
-                <dl className="space-y-2 text-sm">
+                <dl className="space-y-2 text-sm mb-5">
                   {[
                     ['Best for', data.best_for],
                     ['Standout', data.standout],
@@ -147,6 +147,9 @@ export default function CompareDetail() {
                     </div>
                   ))}
                 </dl>
+                <Link href={`/tools/${tool.slug}`}>
+                  <Button className="rounded-full px-5">More info</Button>
+                </Link>
               </div>
             ))}
           </div>

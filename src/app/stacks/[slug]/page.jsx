@@ -77,7 +77,7 @@ export default function StackDetail() {
         <div className="mb-12">
           <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase text-primary bg-accent rounded-full mb-3">Overview</span>
           <h2 className="text-2xl font-bold tracking-tight mb-8">What you need to know</h2>
-          <div className="rounded-2xl bg-muted/40 px-7 py-6">
+          <div className="rounded-2xl bg-muted/40 px-4 sm:px-7 py-5 sm:py-6">
             <div className="relative">
               <div className="absolute left-3.5 top-2 bottom-2 w-px bg-border" />
               <div className="space-y-6">
@@ -144,13 +144,23 @@ export default function StackDetail() {
             <div key={tool.id} className="flex items-start gap-4 p-5 rounded-2xl border border-border bg-card">
               <ToolIcon slug={tool.slug} name={tool.name} size="md" websiteUrl={tool.website_url} />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <h3 className="font-semibold">{tool.name}</h3>
                   <Badge variant="secondary" className="text-xs">{tool.category}</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">{tool.short_description}</p>
+                <div className="flex items-center gap-3 mt-3 sm:hidden">
+                  {tool.monthly_price != null && (
+                    <span className="text-sm font-semibold whitespace-nowrap">
+                      {tool.monthly_price === 0 ? 'Free' : `$${tool.monthly_price}/mo`}
+                    </span>
+                  )}
+                  <Link href={`/tools/${tool.slug}`}>
+                    <Button size="sm" variant="outline" className="rounded-full">More info</Button>
+                  </Link>
+                </div>
               </div>
-              <div className="flex items-center gap-4 shrink-0">
+              <div className="hidden sm:flex items-center gap-4 shrink-0">
                 {tool.monthly_price != null && (
                   <span className="text-sm font-semibold whitespace-nowrap">
                     {tool.monthly_price === 0 ? 'Free' : `$${tool.monthly_price}/mo`}
@@ -311,7 +321,7 @@ export default function StackDetail() {
         </div>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <Link href="/builder">
           <Button className="rounded-full px-6">Build a custom stack <ArrowRight className="w-4 h-4 ml-2" /></Button>
         </Link>

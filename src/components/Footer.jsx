@@ -3,14 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import StackdomLogo from './StackdomLogo';
-import { getAllStacks } from '@/lib/sanity';
+import { getAllStacks, getSiteSettings } from '@/lib/sanity';
 
 export default function Footer() {
   const [featuredStacks, setFeaturedStacks] = useState([]);
+  const [tagline, setTagline] = useState('Build the right stack for your business — without the guesswork.');
 
   useEffect(() => {
     getAllStacks().then(stacks => {
       setFeaturedStacks(stacks.filter(s => s.featured).slice(0, 4));
+    });
+    getSiteSettings().then(settings => {
+      if (settings?.tagline) setTagline(settings.tagline);
     });
   }, []);
 
@@ -23,7 +27,7 @@ export default function Footer() {
               <StackdomLogo className="h-7 w-auto brightness-0 invert" />
             </Link>
             <p className="text-sm opacity-60 leading-relaxed">
-              Build the right stack for your business — without the guesswork.
+              {tagline}
             </p>
           </div>
           <div>
@@ -54,8 +58,8 @@ export default function Footer() {
         <div className="pt-8 border-t border-background/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm opacity-40">© 2026 Stackdom. All rights reserved.</p>
           <div className="flex gap-6">
-            <span className="text-sm opacity-40 hover:opacity-80 cursor-pointer transition-opacity">Privacy</span>
-            <span className="text-sm opacity-40 hover:opacity-80 cursor-pointer transition-opacity">Terms</span>
+            <Link href="/legal/privacy-policy" className="text-sm opacity-40 hover:opacity-80 transition-opacity">Privacy</Link>
+            <Link href="/legal/terms-of-service" className="text-sm opacity-40 hover:opacity-80 transition-opacity">Terms</Link>
           </div>
         </div>
       </div>
