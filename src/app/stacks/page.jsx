@@ -10,6 +10,14 @@ import StackCard from '@/components/StackCard';
 
 const GOAL_SLUGS = ['traffic', 'generate-leads', 'capture-leads', 'close-sales', 'customers', 'automate', 'website', 'email', 'analytics', 'payments', 'support', 'content'];
 
+const GRADIENTS = [
+  'from-green-400 to-blue-500',
+  'from-pink-400 to-purple-500',
+  'from-purple-500 to-blue-500',
+  'from-orange-400 to-pink-500',
+  'from-blue-400 to-teal-500',
+];
+
 export default function Stacks() {
   const [stacks, setStacks] = useState([]);
   const [goalStacks, setGoalStacks] = useState([]);
@@ -41,34 +49,37 @@ export default function Stacks() {
         description="Skip the research. Proven tool combinations, ready to go."
       />
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stacks.map(stack => {
+        {stacks.map((stack, idx) => {
           const businessTypeIcons = { Agency: Briefcase, Service: Wrench, B2B: Rocket, Creator: Sparkles, 'Solo Founder': Zap, Ecommerce: ShoppingCart };
           const Icon = businessTypeIcons[stack.business_type] || Zap;
           return (
             <Link
               key={stack.id}
               href={`/stacks/${stack.slug}`}
-              className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col"
+              className="group block rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col overflow-hidden"
             >
-              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                <Icon className="w-5 h-5 text-primary" />
-              </div>
-              <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {(stack.tools || []).slice(0, 5).map(t => (
-                  <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
-                ))}
-                {(stack.tools || []).length > 5 && (
-                  <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
-                )}
-              </div>
-              <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
-                  <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
+              <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
+              <div className="p-6 flex flex-col flex-1">
+                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
+                <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {(stack.tools || []).slice(0, 5).map(t => (
+                    <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
+                  ))}
+                  {(stack.tools || []).length > 5 && (
+                    <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
+                  )}
+                </div>
+                <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
+                    <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
+                </div>
               </div>
             </Link>
           );
@@ -84,34 +95,37 @@ export default function Stacks() {
             center={true}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-            {goalStacks.map(stack => {
+            {goalStacks.map((stack, idx) => {
               const iconMap = { traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick, closesales: DollarSign, customers: Users, automate: Zap, website: Globe, email: Mail, analytics: BarChart2, payments: CreditCard, support: Headphones, content: PenLine };
               const Icon = iconMap[stack.slug?.replace(/-/g, '')] || Zap;
               return (
                 <Link
                   key={stack.id}
                   href={`/stacks/${stack.slug}`}
-                  className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col"
+                  className="group block rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col overflow-hidden"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {(stack.tools || []).slice(0, 5).map(t => (
-                      <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
-                    ))}
-                    {(stack.tools || []).length > 5 && (
-                      <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
-                    )}
-                  </div>
-                  <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
-                      <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
+                  <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                      <Icon className="w-5 h-5 text-primary" />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
+                    <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {(stack.tools || []).slice(0, 5).map(t => (
+                        <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
+                      ))}
+                      {(stack.tools || []).length > 5 && (
+                        <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
+                      )}
+                    </div>
+                    <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
+                        <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
+                    </div>
                   </div>
                 </Link>
               );
