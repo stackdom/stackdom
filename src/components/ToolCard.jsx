@@ -13,7 +13,7 @@ export default function ToolCard({ tool }) {
         <ToolIcon slug={tool.slug} name={tool.name} />
         <ArrowUpRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
-      <h3 className="font-semibold text-sm mb-1">{tool.name}</h3>
+      <h3 className="font-bold text-lg mb-1">{tool.name}</h3>
       <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">{tool.short_description}</p>
       <Badge variant="secondary" className="text-xs font-medium">{tool.category}</Badge>
     </Link>

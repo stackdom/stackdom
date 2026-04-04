@@ -8,6 +8,14 @@ import SectionHeading from '@/components/SectionHeading';
 import ToolIcon from '@/components/ToolIcon';
 import { getAllComparisons, getAllTools } from '@/lib/sanity';
 
+const GRADIENTS = [
+  'from-green-400 to-blue-500',
+  'from-pink-400 to-purple-500',
+  'from-purple-500 to-blue-500',
+  'from-orange-400 to-pink-500',
+  'from-blue-400 to-teal-500',
+];
+
 export default function Compare() {
   const [pairings, setPairings] = useState([]);
 
@@ -41,23 +49,26 @@ export default function Compare() {
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pairings.map(pair => (
+        {pairings.map((pair, idx) => (
           <Link
             key={pair.key}
             href={`/compare/${pair.key}`}
-            className="group p-6 rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+            className="group rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <ToolIcon slug={pair.slugA} name={pair.nameA} size="sm" websiteUrl={pair.websiteA} />
-              <span className="text-xs font-medium text-muted-foreground">vs</span>
-              <ToolIcon slug={pair.slugB} name={pair.nameB} size="sm" websiteUrl={pair.websiteB} />
+            <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <ToolIcon slug={pair.slugA} name={pair.nameA} size="sm" websiteUrl={pair.websiteA} />
+                <span className="text-xs font-medium text-muted-foreground">vs</span>
+                <ToolIcon slug={pair.slugB} name={pair.nameB} size="sm" websiteUrl={pair.websiteB} />
+              </div>
+              <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{pair.category}</p>
+              <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{pair.nameA} vs {pair.nameB}</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-3">{pair.blurb}</p>
+              <span className="text-xs font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                Compare <ArrowRight className="w-3 h-3" />
+              </span>
             </div>
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{pair.category}</p>
-            <h3 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors">{pair.nameA} vs {pair.nameB}</h3>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-3">{pair.blurb}</p>
-            <span className="text-xs font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              Compare <ArrowRight className="w-3 h-3" />
-            </span>
           </Link>
         ))}
       </div>

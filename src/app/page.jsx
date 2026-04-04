@@ -113,8 +113,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading tag="Featured stacks" title="Curated stacks that just work" description="Pre-built combinations of tools tailored for specific business types. Skip the research." />
           <div className="grid md:grid-cols-3 gap-6">
-            {stacks.map(stack => (
-              <StackCard key={stack.id} stack={stack} />
+            {stacks.map((stack, idx) => (
+              <StackCard key={stack.id} stack={stack} index={idx} />
             ))}
           </div>
           <div className="text-center mt-10">
