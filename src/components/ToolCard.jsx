@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import ToolIcon from './ToolIcon';
@@ -6,7 +6,7 @@ import ToolIcon from './ToolIcon';
 export default function ToolCard({ tool }) {
   return (
     <Link
-      to={`/tools/${tool.slug}`}
+      href={`/tools/${tool.slug}`}
       className="group block p-5 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-3">

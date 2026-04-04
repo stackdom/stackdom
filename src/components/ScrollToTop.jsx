@@ -1,10 +1,7 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+'use client';
 
+// Next.js handles scroll restoration automatically on navigation.
+// This component is kept as a no-op for compatibility.
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
   return null;
 }

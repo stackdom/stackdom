@@ -1,5 +1,8 @@
+'use client';
+
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import StackdomLogo from './StackdomLogo';
 import { Button } from '@/components/ui/button';
@@ -13,13 +16,13 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <StackdomLogo className="h-8 w-auto" />
           </Link>
 
@@ -27,9 +30,9 @@ export default function Navbar() {
             {navLinks.map(link => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.path
+                  pathname === link.path
                     ? 'text-primary bg-accent'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
@@ -40,10 +43,10 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/about">
+            <Link href="/about">
               <Button variant="ghost" size="sm">About</Button>
             </Link>
-            <Link to="/builder">
+            <Link href="/builder">
               <Button size="sm" className="rounded-full px-5">Build Your Stack</Button>
             </Link>
           </div>
@@ -63,10 +66,10 @@ export default function Navbar() {
             {navLinks.map(link => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 onClick={() => setOpen(false)}
                 className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.path
+                  pathname === link.path
                     ? 'text-primary bg-accent'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
@@ -75,9 +78,9 @@ export default function Navbar() {
               </Link>
             ))}
             <hr className="my-2 border-border" />
-            <Link to="/about" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground">About</Link>
-            <Link to="/contact" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground">Contact</Link>
-            <Link to="/builder" onClick={() => setOpen(false)}>
+            <Link href="/about" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground">About</Link>
+            <Link href="/contact" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground">Contact</Link>
+            <Link href="/builder" onClick={() => setOpen(false)}>
               <Button size="sm" className="w-full mt-2 rounded-full">Build Your Stack</Button>
             </Link>
           </div>

@@ -1,22 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { TrendingUp, Search, MousePointerClick, DollarSign, Users, Zap, Globe, Mail, BarChart2, CreditCard, Headphones, PenLine, ArrowRight } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+'use client';
 
-const ICON_MAP = {
-  TrendingUp,
-  Search,
-  MousePointerClick,
-  DollarSign,
-  Users,
-  Zap,
-  Globe,
-  Mail,
-  BarChart2,
-  CreditCard,
-  Headphones,
-  PenLine,
-};
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { TrendingUp, Search, MousePointerClick, DollarSign, Users, Zap, Globe, Mail, BarChart2, CreditCard, Headphones, PenLine, ArrowRight } from 'lucide-react';
+import { getAllStacks } from '@/lib/sanity';
 
 export const GOALS = [
   { slug: 'traffic', title: 'Drive traffic', description: 'Get more people to your site', icon: TrendingUp, tools: ['WordPress', 'Google Analytics', 'Mailchimp'] },
@@ -33,14 +20,21 @@ export const GOALS = [
   { slug: 'content', title: 'Create content', description: 'Design, write, and publish faster', icon: PenLine, tools: ['Canva', 'Notion', 'WordPress'] },
 ];
 
-const GOAL_SLUGS = ['traffic', 'generate-leads', 'capture-leads', 'close-sales', 'customers', 'automate', 'website', 'email', 'analytics', 'payments', 'support', 'content'];
+const GOAL_SLUGS = GOALS.map(g => g.slug);
+
+const iconMap = {
+  traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick,
+  closesales: DollarSign, customers: Users, automate: Zap,
+  website: Globe, email: Mail, analytics: BarChart2,
+  payments: CreditCard, support: Headphones, content: PenLine,
+};
 
 export default function GoalStackGrid() {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.Stack.list('-created_date', 50).then(data => {
+    getAllStacks().then(data => {
       const goalStacks = data.filter(s => GOAL_SLUGS.includes(s.slug));
       setGoals(goalStacks);
       setLoading(false);
@@ -51,8 +45,6 @@ export default function GoalStackGrid() {
 
   if (loading) return null;
 
-  const displayGoals = goals;
-
   return (
     <section className="py-20 sm:py-28 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,13 +53,12 @@ export default function GoalStackGrid() {
           <p className="text-muted-foreground text-base sm:text-lg">Choose your goal and we'll build the right growth stack.</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayGoals.map(goal => {
-            const iconMap = { traffic: TrendingUp, generateLeads: Search, captureLeads: MousePointerClick, closeSales: DollarSign, customers: Users, automate: Zap, website: Globe, email: Mail, analytics: BarChart2, payments: CreditCard, support: Headphones, content: PenLine };
+          {goals.map(goal => {
             const Icon = iconMap[goal.slug?.replace(/-/g, '')] || Zap;
             return (
               <Link
                 key={goal.slug}
-                to={`/stacks/${goal.slug}`}
+                href={`/stacks/${goal.slug}`}
                 className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col"
               >
                 <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">

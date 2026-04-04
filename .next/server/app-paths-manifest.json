@@ -1,0 +1,4 @@
+{
+  "/stacks/[slug]/page": "app/stacks/[slug]/page.js",
+  "/page": "app/page.js"
+}

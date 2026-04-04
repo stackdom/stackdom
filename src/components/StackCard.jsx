@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 export default function StackCard({ stack }) {
   return (
     <Link
-      to={`/stacks/${stack.slug}`}
+      href={`/stacks/${stack.slug}`}
       className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col"
     >
       <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>

@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export default function PlaybookCard({ playbook }) {
   return (
     <Link
-      to={`/playbooks/${playbook.slug}`}
+      href={`/playbooks/${playbook.slug}`}
       className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300"
     >
       <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
