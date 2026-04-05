@@ -41,6 +41,7 @@ const TOOL_FIELDS = `
   who_is_this_for,
   when_to_use,
   when_not_to_use,
+  use_cases,
   featured
 `;
 

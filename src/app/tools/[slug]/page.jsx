@@ -225,6 +225,20 @@ export default function ToolDetail() {
           );
         })()}
 
+        {tool.use_cases?.length > 0 && (
+          <div className="rounded-2xl bg-muted/40 px-7 py-6">
+            <h2 className="text-xl font-semibold mb-4">Use Cases</h2>
+            <ul className="space-y-2.5">
+              {tool.use_cases.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm">
+                  <span className="text-primary mt-0.5 shrink-0">→</span>
+                  <span className="text-muted-foreground leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {(tool.pros?.length > 0 || tool.cons?.length > 0) && (
           <div className="grid md:grid-cols-2 gap-6">
             {tool.pros?.length > 0 && (

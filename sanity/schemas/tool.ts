@@ -53,5 +53,6 @@ export default defineType({
     defineField({ name: 'when_to_use', title: 'When to Use It', type: 'array', of: [{ type: 'string' }] }),
     defineField({ name: 'when_not_to_use', title: 'When NOT to Use It', type: 'array', of: [{ type: 'string' }] }),
     defineField({ name: 'featured', title: 'Featured', type: 'boolean' }),
+    defineField({ name: 'use_cases', title: 'Use Cases', type: 'array', of: [{ type: 'string' }] }),
   ],
 });
