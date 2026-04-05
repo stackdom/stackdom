@@ -377,9 +377,6 @@ export default function StackDetail() {
         <Link href="/builder">
           <Button className="rounded-full px-6">Build a custom stack <ArrowRight className="w-4 h-4 ml-2" /></Button>
         </Link>
-        <Link href="/playbooks">
-          <Button variant="outline" className="rounded-full px-6">Read playbooks</Button>
-        </Link>
       </div>
     </div>
   );

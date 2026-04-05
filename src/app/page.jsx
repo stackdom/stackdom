@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Shield, Clock, Target, Layers, BarChart3, Mail, Globe, Bot, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getAllTools, getAllStacks, getAllPlaybooks } from '@/lib/sanity';
+import { getAllTools, getAllStacks } from '@/lib/sanity';
 import SectionHeading from '@/components/SectionHeading';
 import GoalStackGrid from '@/components/GoalStackGrid';
 import ToolCard from '@/components/ToolCard';
 import StackCard from '@/components/StackCard';
-import PlaybookCard from '@/components/PlaybookCard';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -24,12 +23,9 @@ const stagger = {
 export default function Home() {
   const [tools, setTools] = useState([]);
   const [stacks, setStacks] = useState([]);
-  const [playbooks, setPlaybooks] = useState([]);
-
   useEffect(() => {
     getAllTools().then(data => setTools(data.slice(0, 8)));
     getAllStacks().then(data => setStacks(data.filter(s => s.featured).slice(0, 3)));
-    getAllPlaybooks().then(data => setPlaybooks(data.filter(p => p.featured).slice(0, 4)));
   }, []);
 
   return (
@@ -87,7 +83,7 @@ export default function Home() {
             {[
               { num: '01', title: 'Answer a few questions', desc: 'Tell us about your business type, size, budget, and goals. Takes 60 seconds.' },
               { num: '02', title: 'Get a tailored stack', desc: 'We match you with the best tools based on real-world performance and fit.' },
-              { num: '03', title: 'Put it into action', desc: 'Follow our playbooks to set up and connect your tools for maximum impact.' },
+              { num: '03', title: 'Put it into action', desc: 'Set up and connect your tools for maximum impact. Your stack is ready to go.' },
             ].map(step => (
               <motion.div key={step.num} variants={fadeUp} className="relative p-8 rounded-2xl bg-card border border-border">
                 <span className="text-5xl font-black text-primary/10 absolute top-4 right-6">{step.num}</span>

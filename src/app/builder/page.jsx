@@ -237,12 +237,7 @@ export default function StackBuilder() {
                   Explore more tools
                 </Button>
               </Link>
-              <Link href="/playbooks">
-                <Button variant="outline" className="rounded-full px-6 w-full sm:w-auto">
-                  Read playbooks
-                </Button>
-              </Link>
-              <Link href="/stacks">
+<Link href="/stacks">
                 <Button className="rounded-full px-6 w-full sm:w-auto">
                   View curated stacks <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
