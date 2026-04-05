@@ -3,11 +3,31 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, DollarSign, Check, RefreshCw, ExternalLink, X, Users, Lightbulb, AlertTriangle, Clock, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, DollarSign, Check, RefreshCw, ExternalLink, X, Users, Lightbulb, AlertTriangle, Clock, Zap, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getStackBySlug, getAllTools, getAllStacks } from '@/lib/sanity';
 import ToolIcon from '@/components/ToolIcon';
+
+function FAQ({ question, answer }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium hover:bg-muted/40 transition-colors"
+      >
+        <span>{question}</span>
+        {open ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
+      </button>
+      {open && (
+        <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-border bg-muted/20">
+          <p className="pt-3">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function StackDetail() {
   const { slug } = useParams();
@@ -53,8 +73,21 @@ export default function StackDetail() {
   const toolsWithPrice = stackTools.filter(t => t.monthly_price != null);
   const totalCost = toolsWithPrice.reduce((sum, t) => sum + t.monthly_price, 0);
 
+  const faqSchema = stack.faqs?.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: stack.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
       <Link href="/stacks" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4" /> All stacks
       </Link>
@@ -95,6 +128,14 @@ export default function StackDetail() {
               </div>
             </div>
           </div>
+          {/* Visually hidden definition list for AI crawlers */}
+          <dl style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
+            {stack.overview_problem && <><dt>What problem does this stack solve?</dt><dd>{stack.overview_problem}</dd></>}
+            {stack.overview_solution && <><dt>What is the solution?</dt><dd>{stack.overview_solution}</dd></>}
+            {stack.overview_how_it_works && <><dt>How does this stack work?</dt><dd>{stack.overview_how_it_works}</dd></>}
+            {stack.overview_use_cases && <><dt>What are the use cases?</dt><dd>{stack.overview_use_cases}</dd></>}
+            {stack.overview_tradeoff && <><dt>What is the trade-off?</dt><dd>{stack.overview_tradeoff}</dd></>}
+          </dl>
         </div>
       )}
 
@@ -275,6 +316,17 @@ export default function StackDetail() {
               </ul>
             </div>
           )}
+        </div>
+      )}
+
+      {stack.faqs?.length > 0 && (
+        <div className="mb-12 rounded-2xl bg-muted/40 px-7 py-6">
+          <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
+          <div className="space-y-2">
+            {stack.faqs.map((faq, i) => (
+              <FAQ key={i} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
         </div>
       )}
 

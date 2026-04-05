@@ -96,8 +96,37 @@ export default function ToolDetail() {
     );
   }
 
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: tool.name,
+    ...(tool.quick_summary || tool.short_description
+      ? { description: tool.quick_summary || tool.short_description }
+      : {}),
+    ...(tool.website_url ? { url: tool.website_url } : {}),
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    ...(tool.monthly_price != null
+      ? { offers: { '@type': 'Offer', price: tool.monthly_price, priceCurrency: 'USD' } }
+      : {}),
+  };
+
+  const faqSchema = tool.faqs?.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: tool.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
       <Link href="/tools" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4" /> All tools
       </Link>

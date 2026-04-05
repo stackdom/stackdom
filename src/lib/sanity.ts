@@ -67,6 +67,10 @@ const STACK_FIELDS = `
   when_not_to_use,
   alternatives,
   estimated_monthly_cost,
+  faqs[] {
+    question,
+    answer
+  },
   featured
 `;
 
