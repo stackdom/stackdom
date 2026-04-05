@@ -50,7 +50,7 @@ async function generateFaqs(stack) {
 Based on this stack:
 ${context}
 
-Generate exactly 4 FAQs that match real questions someone would ask an AI assistant about this stack — for example: what tools are needed, how much it costs, whether it suits a certain business type or team size, how it compares, or how hard it is to set up.
+Write 4 FAQs about this stack that are evergreen and do not mention specific tool names. Focus on the business goal, the type of user it suits, rough cost ranges, and when to use or avoid this approach. Questions should match what someone would ask an AI assistant when researching this topic.
 
 Return ONLY a valid JSON object (no markdown, no code fences, no explanation):
 
