@@ -134,6 +134,7 @@ export default function StackBuilder() {
         name: toolData.name,
         reason: toolData.tagline || toolData.short_description || '',
         slug: toolData.slug,
+        go_slug: toolData.go_slug || null,
         description: toolData.short_description || '',
         monthly_price: toolData.monthly_price ?? null,
         website_url: toolData.website_url || null,
@@ -208,13 +209,13 @@ export default function StackBuilder() {
                     <div key={tool.name} className="flex justify-between items-center text-sm">
                       <div className="flex items-center gap-2">
                         <ToolIcon slug={tool.slug} name={tool.name} size="sm" websiteUrl={tool.website_url} />
-                        {tool.website_url ? (
-                          <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{tool.name}</a>
+                        {(tool.go_slug || tool.slug) ? (
+                          <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{tool.name}</a>
                         ) : (
                           <span className="text-muted-foreground">{tool.name}</span>
                         )}
-                        {tool.website_url && (
-                          <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary">
+                        {(tool.go_slug || tool.slug) && (
+                          <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary">
                             <ExternalLink className="w-3 h-3" />
                           </a>
                         )}

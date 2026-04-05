@@ -17,6 +17,7 @@ const TOOL_FIELDS = `
   tagline,
   category,
   website_url,
+  go_slug,
   monthly_price,
   quick_summary,
   features,

@@ -224,13 +224,13 @@ export default function StackDetail() {
               <div key={tool.id} className="flex justify-between items-center text-sm">
                 <div className="flex items-center gap-2">
                   <ToolIcon slug={tool.slug} name={tool.name} size="sm" websiteUrl={tool.website_url} />
-                  {tool.website_url ? (
-                    <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{tool.name}</a>
+                  {(tool.go_slug || tool.slug) ? (
+                    <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{tool.name}</a>
                   ) : (
                     <span className="text-muted-foreground">{tool.name}</span>
                   )}
-                  {tool.website_url && (
-                    <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  {(tool.go_slug || tool.slug) && (
+                    <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}

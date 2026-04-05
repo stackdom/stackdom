@@ -147,8 +147,8 @@ export default function ToolDetail() {
                 {tool.monthly_price === 0 ? 'Free' : `From $${tool.monthly_price}/mo`}
               </span>
             )}
-            {tool.website_url && (
-              <a href={tool.website_url} target="_blank" rel="noopener noreferrer"
+            {(tool.go_slug || tool.slug) && (
+              <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-sm font-semibold px-5 py-2 rounded-full hover:bg-primary/90 transition-colors">
                 Visit website <ExternalLink className="w-3.5 h-3.5" />
               </a>
@@ -288,9 +288,9 @@ export default function ToolDetail() {
                 )}
               </div>
             )}
-            {tool.website_url && (
+            {(tool.go_slug || tool.slug) && (
               <p className="text-xs text-muted-foreground mt-3">
-                Pricing may vary. <a href={tool.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Check {tool.name} website</a> for current plans.
+                Pricing may vary. <a href={`/go/${tool.go_slug || tool.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Check {tool.name} website</a> for current plans.
               </p>
             )}
           </div>
