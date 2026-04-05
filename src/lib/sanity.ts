@@ -125,6 +125,13 @@ export async function getToolBySlug(slug: string) {
   );
 }
 
+export async function getToolByGoSlug(slug: string) {
+  return client.fetch(
+    `*[_type == "tool" && go_slug == $slug][0]{ affiliateUrl, website_url }`,
+    { slug }
+  );
+}
+
 // Stacks
 export async function getAllStacks() {
   return client.fetch(

@@ -11,6 +11,8 @@ export default defineType({
     defineField({ name: 'tagline', title: 'Tagline', type: 'string' }),
     defineField({ name: 'category', title: 'Category', type: 'string' }),
     defineField({ name: 'website_url', title: 'Website URL', type: 'url' }),
+    defineField({ name: 'affiliateUrl', title: 'Affiliate URL', type: 'url' }),
+    defineField({ name: 'go_slug', title: 'Go Slug (redirect vanity)', type: 'string' }),
     defineField({ name: 'monthly_price', title: 'Monthly Price (USD)', type: 'number' }),
     defineField({ name: 'quick_summary', title: 'Quick Summary', type: 'text' }),
     defineField({ name: 'features', title: 'Features', type: 'array', of: [{ type: 'string' }] }),
