@@ -12,7 +12,7 @@ export async function GET(
     tool?.affiliateUrl || tool?.website_url || '/tools';
 
   return NextResponse.redirect(destination, {
-    status: 301,
+    status: 302,
     headers: {
       'Cache-Control': 'no-store',
     },
