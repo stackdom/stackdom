@@ -1,78 +1,66 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Check, X, Target, Users, Zap, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getToolBySlug, getAllStacks, getComparisonBySlug } from '@/lib/sanity';
+import { getToolBySlug, getAllStacks, getComparisonBySlug, getAllComparisons } from '@/lib/sanity';
 import ToolIcon from '@/components/ToolIcon';
+import FAQAccordion from './FAQAccordion';
 
-function FAQ({ question, answer }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-border rounded-xl overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium hover:bg-muted/40 transition-colors"
-      >
-        <span>{question}</span>
-        <span className="text-muted-foreground shrink-0 ml-2">{open ? '−' : '+'}</span>
-      </button>
-      {open && (
-        <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-border bg-muted/20">
-          <p className="pt-3">{answer}</p>
-        </div>
-      )}
-    </div>
-  );
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const comparisons = await getAllComparisons();
+  return comparisons.map((c) => ({ pair: c.slug }));
 }
 
-export default function CompareDetail() {
-  const { pair } = useParams();
-  const [toolA, setToolA] = useState(null);
-  const [toolB, setToolB] = useState(null);
-  const [content, setContent] = useState(null);
-  const [relatedStacks, setRelatedStacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+export async function generateMetadata({ params }) {
+  const { pair } = await params;
+  const comparison = await getComparisonBySlug(pair);
+  if (!comparison) return {};
 
-  useEffect(() => {
-    if (!pair) { setLoading(false); return; }
-    getComparisonBySlug(pair).then(comparison => {
-      if (!comparison) { setLoading(false); return; }
-      setContent(comparison);
-      Promise.all([
-        getToolBySlug(comparison.tool_a_slug),
-        getToolBySlug(comparison.tool_b_slug),
-        getAllStacks(),
-      ]).then(([tA, tB, stacks]) => {
-        setToolA(tA || null);
-        setToolB(tB || null);
-        if (tA && tB) {
-          setRelatedStacks(stacks.filter(s => (s.tools || []).includes(tA.name) || (s.tools || []).includes(tB.name)).slice(0, 4));
-        }
-        setLoading(false);
-      });
-    });
-  }, [pair]);
+  const [tA, tB] = await Promise.all([
+    getToolBySlug(comparison.tool_a_slug),
+    getToolBySlug(comparison.tool_b_slug),
+  ]);
+  if (!tA || !tB) return {};
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const title = `${tA.name} vs ${tB.name} — ${tA.category} Tool Comparison | Stackdom`;
+  const description =
+    comparison.quick_summary ||
+    `Compare ${tA.name} and ${tB.name} side-by-side. Pricing, features, pros and cons to help you choose.`;
 
-  if (!toolA || !toolB) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Comparison not found</h1>
-        <Link href="/compare"><Button variant="outline">Back to comparisons</Button></Link>
-      </div>
-    );
-  }
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://stackdom.com/compare/${pair}`,
+      type: 'website',
+      images: [{ url: '/og-default.png', width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+export default async function CompareDetail({ params }) {
+  const { pair } = await params;
+
+  const content = await getComparisonBySlug(pair);
+  if (!content) notFound();
+
+  const [toolA, toolB, allStacks] = await Promise.all([
+    getToolBySlug(content.tool_a_slug),
+    getToolBySlug(content.tool_b_slug),
+    getAllStacks(),
+  ]);
+
+  if (!toolA || !toolB) notFound();
+
+  const relatedStacks = allStacks
+    .filter((s) => (s.tools || []).includes(toolA.name) || (s.tools || []).includes(toolB.name))
+    .slice(0, 4);
 
   const allFeatures = [...new Set([...(toolA.features || []), ...(toolB.features || [])])];
   const sb = content?.side_by_side;
@@ -385,11 +373,7 @@ export default function CompareDetail() {
       {content?.faqs?.length > 0 && (
         <div className="mb-10">
           <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase text-primary bg-accent rounded-full mb-4">FAQs</span>
-          <div className="space-y-2">
-            {content.faqs.map((faq, i) => (
-              <FAQ key={i} question={faq.q} answer={faq.a} />
-            ))}
-          </div>
+          <FAQAccordion faqs={content.faqs} />
         </div>
       )}
 

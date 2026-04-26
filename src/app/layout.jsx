@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 export const metadata = {
+  metadataBase: new URL('https://stackdom.com'),
   title: 'Stackdom – Build the right software stack',
   description: 'Curated tools. Proven stacks. No guesswork. Just go.',
   icons: {

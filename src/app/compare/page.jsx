@@ -1,12 +1,28 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SectionHeading from '@/components/SectionHeading';
 import ToolIcon from '@/components/ToolIcon';
 import { getAllComparisons, getAllTools } from '@/lib/sanity';
+
+export const revalidate = 3600;
+
+export const metadata = {
+  title: 'Compare Tools Side-by-Side | Stackdom',
+  description: 'Detailed head-to-head breakdowns of the tools you\'re considering. Make the right choice, faster.',
+  openGraph: {
+    title: 'Compare Tools Side-by-Side | Stackdom',
+    description: 'Detailed head-to-head breakdowns of the tools you\'re considering. Make the right choice, faster.',
+    url: 'https://stackdom.com/compare',
+    type: 'website',
+    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: 'Stackdom Compare' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Compare Tools Side-by-Side | Stackdom',
+    description: 'Detailed head-to-head breakdowns of the tools you\'re considering. Make the right choice, faster.',
+  },
+};
 
 const GRADIENTS = [
   'from-green-400 to-blue-500',
@@ -16,29 +32,25 @@ const GRADIENTS = [
   'from-blue-400 to-teal-500',
 ];
 
-export default function Compare() {
-  const [pairings, setPairings] = useState([]);
+export default async function Compare() {
+  const [comparisons, tools] = await Promise.all([getAllComparisons(), getAllTools()]);
+  const toolMap = Object.fromEntries(tools.map((t) => [t.slug, t]));
 
-  useEffect(() => {
-    Promise.all([getAllComparisons(), getAllTools()]).then(([comparisons, tools]) => {
-      const toolMap = Object.fromEntries(tools.map(t => [t.slug, t]));
-      setPairings(comparisons.map(c => {
-        const tA = toolMap[c.tool_a_slug];
-        const tB = toolMap[c.tool_b_slug];
-        return {
-          key: c.slug,
-          slugA: c.tool_a_slug,
-          slugB: c.tool_b_slug,
-          nameA: tA?.name || c.tool_a_slug,
-          nameB: tB?.name || c.tool_b_slug,
-          category: tA?.category || '',
-          blurb: c.quick_summary?.split('.')[0] || '',
-          websiteA: tA?.website_url,
-          websiteB: tB?.website_url,
-        };
-      }));
-    });
-  }, []);
+  const pairings = comparisons.map((c) => {
+    const tA = toolMap[c.tool_a_slug];
+    const tB = toolMap[c.tool_b_slug];
+    return {
+      key: c.slug,
+      slugA: c.tool_a_slug,
+      slugB: c.tool_b_slug,
+      nameA: tA?.name || c.tool_a_slug,
+      nameB: tB?.name || c.tool_b_slug,
+      category: tA?.category || '',
+      blurb: c.quick_summary?.split('.')[0] || '',
+      websiteA: tA?.website_url,
+      websiteB: tB?.website_url,
+    };
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">

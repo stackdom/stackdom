@@ -1,12 +1,27 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, TrendingUp, Search, MousePointerClick, DollarSign, Users, Zap, Globe, Mail, BarChart2, CreditCard, Headphones, PenLine, Briefcase, Wrench, Rocket, Sparkles, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAllStacks } from '@/lib/sanity';
 import SectionHeading from '@/components/SectionHeading';
-import StackCard from '@/components/StackCard';
+
+export const revalidate = 3600;
+
+export const metadata = {
+  title: 'Pre-built Stacks for Every Business | Stackdom',
+  description: 'Skip the research. Proven tool combinations organised by business type and growth goal.',
+  openGraph: {
+    title: 'Pre-built Stacks for Every Business | Stackdom',
+    description: 'Skip the research. Proven tool combinations organised by business type and growth goal.',
+    url: 'https://stackdom.com/stacks',
+    type: 'website',
+    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: 'Stackdom Stacks' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pre-built Stacks for Every Business | Stackdom',
+    description: 'Skip the research. Proven tool combinations organised by business type and growth goal.',
+  },
+};
 
 const GOAL_SLUGS = ['traffic', 'generate-leads', 'capture-leads', 'close-sales', 'customers', 'automate', 'website', 'email', 'analytics', 'payments', 'support', 'content'];
 
@@ -18,28 +33,47 @@ const GRADIENTS = [
   'from-blue-400 to-teal-500',
 ];
 
-export default function Stacks() {
-  const [stacks, setStacks] = useState([]);
-  const [goalStacks, setGoalStacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+const BUSINESS_TYPE_ICONS = { Agency: Briefcase, Service: Wrench, B2B: Rocket, Creator: Sparkles, 'Solo Founder': Zap, Ecommerce: ShoppingCart };
 
-  useEffect(() => {
-    getAllStacks().then(data => {
-      const goals = data.filter(s => GOAL_SLUGS.includes(s.slug));
-      const main = data.filter(s => !GOAL_SLUGS.includes(s.slug));
-      setStacks(main);
-      setGoalStacks(goals);
-      setLoading(false);
-    });
-  }, []);
+const GOAL_ICONS = { traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick, closesales: DollarSign, customers: Users, automate: Zap, website: Globe, email: Mail, analytics: BarChart2, payments: CreditCard, support: Headphones, content: PenLine };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
+function StackCardLink({ stack, idx, Icon }) {
+  return (
+    <Link
+      href={`/stacks/${stack.slug}`}
+      className="group block rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col overflow-hidden"
+    >
+      <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
+      <div className="p-6 flex flex-col flex-1">
+        <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+          <Icon className="w-5 h-5 text-primary" />
+        </div>
+        <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {(stack.tools || []).slice(0, 5).map((t) => (
+            <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
+          ))}
+          {(stack.tools || []).length > 5 && (
+            <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
+          )}
+        </div>
+        <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
+            <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
+          </div>
+          <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
+        </div>
       </div>
-    );
-  }
+    </Link>
+  );
+}
+
+export default async function Stacks() {
+  const data = await getAllStacks();
+  const goalStacks = data.filter((s) => GOAL_SLUGS.includes(s.slug));
+  const stacks = data.filter((s) => !GOAL_SLUGS.includes(s.slug));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -50,39 +84,8 @@ export default function Stacks() {
       />
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stacks.map((stack, idx) => {
-          const businessTypeIcons = { Agency: Briefcase, Service: Wrench, B2B: Rocket, Creator: Sparkles, 'Solo Founder': Zap, Ecommerce: ShoppingCart };
-          const Icon = businessTypeIcons[stack.business_type] || Zap;
-          return (
-            <Link
-              key={stack.id}
-              href={`/stacks/${stack.slug}`}
-              className="group block rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col overflow-hidden"
-            >
-              <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
-              <div className="p-6 flex flex-col flex-1">
-                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {(stack.tools || []).slice(0, 5).map(t => (
-                    <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
-                  ))}
-                  {(stack.tools || []).length > 5 && (
-                    <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
-                  )}
-                </div>
-                <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
-                    <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
-                </div>
-              </div>
-            </Link>
-          );
+          const Icon = BUSINESS_TYPE_ICONS[stack.business_type] || Zap;
+          return <StackCardLink key={stack.id} stack={stack} idx={idx} Icon={Icon} />;
         })}
       </div>
 
@@ -96,39 +99,8 @@ export default function Stacks() {
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {goalStacks.map((stack, idx) => {
-              const iconMap = { traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick, closesales: DollarSign, customers: Users, automate: Zap, website: Globe, email: Mail, analytics: BarChart2, payments: CreditCard, support: Headphones, content: PenLine };
-              const Icon = iconMap[stack.slug?.replace(/-/g, '')] || Zap;
-              return (
-                <Link
-                  key={stack.id}
-                  href={`/stacks/${stack.slug}`}
-                  className="group block rounded-2xl border border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 flex flex-col overflow-hidden"
-                >
-                  <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{stack.name}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{stack.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {(stack.tools || []).slice(0, 5).map(t => (
-                        <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
-                      ))}
-                      {(stack.tools || []).length > 5 && (
-                        <span className="px-3 py-1 text-xs border border-border rounded-full text-muted-foreground bg-background">+{stack.tools.length - 5}</span>
-                      )}
-                    </div>
-                    <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">Estimated cost</p>
-                        <p className="text-base font-bold">{stack.estimated_monthly_cost || '—'}</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-primary mb-0.5" />
-                    </div>
-                  </div>
-                </Link>
-              );
+              const Icon = GOAL_ICONS[stack.slug?.replace(/-/g, '')] || Zap;
+              return <StackCardLink key={stack.id} stack={stack} idx={idx} Icon={Icon} />;
             })}
           </div>
         </section>
