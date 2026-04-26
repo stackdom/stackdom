@@ -381,7 +381,7 @@ const SWITCH_HUBSPOT_TO_PIPEDRIVE = {
   slug: { _type: 'slug', current: 'hubspot-to-pipedrive' },
   from_tool_slug: 'hubspot',
   to_tool_slug: 'pipedrive',
-  category: 'Sales · CRM · Migration',
+  category: 'CRM',
   headline: 'Switch from HubSpot to Pipedrive',
   intro:
     "Pipedrive gives sales teams everything they actually use in HubSpot at less than half the price",
@@ -568,7 +568,7 @@ const SWITCH_MAILCHIMP_TO_LOOPS = {
   slug: { _type: 'slug', current: 'mailchimp-to-loops' },
   from_tool_slug: 'mailchimp',
   to_tool_slug: 'loops',
-  category: 'Email · Marketing · Migration',
+  category: 'Email',
   headline: 'Switch from Mailchimp to Loops',
   intro:
     "Loops gives you a better editor and honest pricing so you stop paying more every time your list grows",
@@ -750,7 +750,7 @@ const SWITCH_CALENDLY_TO_CAL_COM = {
   slug: { _type: 'slug', current: 'calendly-to-cal-com' },
   from_tool_slug: 'calendly',
   to_tool_slug: 'cal-com',
-  category: 'Scheduling · Productivity · Migration',
+  category: 'Scheduling',
   headline: 'Switch from Calendly to Cal.com',
   intro:
     "Cal.com covers the same core scheduling as Calendly without the rising costs as your team grows",
