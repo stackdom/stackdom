@@ -76,7 +76,7 @@ export default async function Compare() {
               </div>
               <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{pair.category}</p>
               <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{pair.nameA} vs {pair.nameB}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-3">{pair.blurb}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">{pair.blurb}</p>
               <span className="text-xs font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 Compare <ArrowRight className="w-3 h-3" />
               </span>
