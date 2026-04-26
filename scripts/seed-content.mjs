@@ -950,13 +950,13 @@ async function toolExists(slug) {
 }
 
 async function seedTool(toolData) {
-  const _id = `tool.${toolData.slug.current}`;
+  const _id = `tool-${toolData.slug.current}`;
   await client.createOrReplace({ _id, _type: 'tool', ...toolData });
   console.log(`  ✓ ${_id}`);
 }
 
 async function seedSwitch(swData) {
-  const _id = `switch.${swData.slug.current}`;
+  const _id = `switch-${swData.slug.current}`;
 
   // Pre-flight: verify referenced tools exist
   if (!(await toolExists(swData.from_tool_slug))) {
