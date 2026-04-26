@@ -12,6 +12,7 @@ const navLinks = [
   { label: 'Stacks', path: '/stacks' },
   { label: 'Tools', path: '/tools' },
   { label: 'Compare', path: '/compare' },
+  { label: 'Switch', path: '/switch' },
 ];
 
 export default function Navbar() {

@@ -4,16 +4,18 @@ import {
   getAllStacks,
   getAllComparisons,
   getAllPlaybooks,
+  getAllSwitches,
 } from '@/lib/sanity';
 
 const BASE_URL = 'https://stackdom.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [tools, stacks, comparisons, playbooks] = await Promise.all([
+  const [tools, stacks, comparisons, playbooks, switches] = await Promise.all([
     getAllTools(),
     getAllStacks(),
     getAllComparisons(),
     getAllPlaybooks(),
+    getAllSwitches(),
   ]);
 
   const now = new Date();
@@ -23,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/tools`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/stacks`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/compare`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE_URL}/switch`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/playbooks`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/builder`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
@@ -65,5 +68,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...toolRoutes, ...stackRoutes, ...compareRoutes, ...playbookRoutes];
+  const switchRoutes: MetadataRoute.Sitemap = switches
+    .filter((s: { slug?: string }) => s.slug)
+    .map((s: { slug: string }) => ({
+      url: `${BASE_URL}/switch/${s.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
+
+  return [...staticRoutes, ...toolRoutes, ...stackRoutes, ...compareRoutes, ...playbookRoutes, ...switchRoutes];
 }

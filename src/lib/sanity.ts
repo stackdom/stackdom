@@ -217,6 +217,108 @@ export async function getComparisonBySlug(slug: string) {
   );
 }
 
+// Switches (migration guides)
+const SWITCH_LIST_FIELDS = `
+  "id": _id,
+  "slug": coalesce(slug.current, slug),
+  from_tool_slug,
+  to_tool_slug,
+  category,
+  headline,
+  intro,
+  "annual_saving": quick_summary.annual_saving,
+  featured
+`;
+
+const SWITCH_DETAIL_FIELDS = `
+  "id": _id,
+  "slug": coalesce(slug.current, slug),
+  from_tool_slug,
+  to_tool_slug,
+  category,
+  headline,
+  intro,
+  quick_summary,
+  why_switch,
+  why_stay,
+  cost_rows[] {
+    label,
+    from_value,
+    to_value,
+    total_saving
+  },
+  cost_footnote,
+  what_you_keep,
+  what_you_lose,
+  what_you_gain,
+  migration_time_items[] {
+    label,
+    duration
+  },
+  migration_time_total,
+  steps[] {
+    title,
+    body
+  },
+  gotchas[] {
+    title,
+    body
+  },
+  definitely_switch,
+  maybe_switch,
+  dont_switch,
+  final_verdict,
+  before_you_switch_note,
+  faqs[] {
+    q,
+    a
+  },
+  "related_switches": related_switches[]->{
+    "id": _id,
+    "slug": coalesce(slug.current, slug),
+    from_tool_slug,
+    to_tool_slug,
+    category,
+    headline,
+    "annual_saving": quick_summary.annual_saving
+  },
+  "related_tools": related_tools[]->{
+    "id": _id,
+    "slug": coalesce(slug.current, slug),
+    name,
+    category,
+    short_description,
+    website_url,
+    monthly_price
+  },
+  "related_stacks": related_stacks[]->{
+    "id": _id,
+    "slug": coalesce(slug.current, slug),
+    name,
+    business_type,
+    description
+  }
+`;
+
+export async function getAllSwitches() {
+  return client.fetch(
+    `*[_type == "switch"] | order(_createdAt desc) { ${SWITCH_LIST_FIELDS} }`
+  );
+}
+
+export async function getSwitchBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "switch" && (slug.current == $slug || slug == $slug)][0] { ${SWITCH_DETAIL_FIELDS} }`,
+    { slug }
+  );
+}
+
+export async function getSwitchSlugs() {
+  return client.fetch(
+    `*[_type == "switch" && defined(slug.current)]{ "slug": slug.current }`
+  );
+}
+
 // Site Settings
 export async function getSiteSettings() {
   return client.fetch(

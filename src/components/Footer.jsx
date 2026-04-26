@@ -37,6 +37,7 @@ export default function Footer() {
               <Link href="/stacks" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">Stacks</Link>
               <Link href="/tools" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">Tools</Link>
               <Link href="/compare" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">Compare</Link>
+              <Link href="/switch" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">Switch</Link>
             </div>
           </div>
           <div>

@@ -3,5 +3,6 @@ import legalPage from './legalPage';
 import siteSettings from './siteSettings';
 import tool from './tool';
 import stack from './stack';
+import switchType from './switch';
 
-export const schemaTypes = [comparison, legalPage, siteSettings, tool, stack];
+export const schemaTypes = [comparison, legalPage, siteSettings, tool, stack, switchType];
