@@ -56,38 +56,47 @@ export default async function Switches() {
                 className="group rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden"
               >
                 <div className={`h-1 bg-gradient-to-r ${GRADIENTS[idx % GRADIENTS.length]}`} />
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <ToolIcon
-                      slug={sw.from_tool_slug}
-                      name={fromTool?.name || sw.from_tool_slug}
-                      size="sm"
-                      websiteUrl={fromTool?.website_url}
-                    />
-                    <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                    <ToolIcon
-                      slug={sw.to_tool_slug}
-                      name={toTool?.name || sw.to_tool_slug}
-                      size="sm"
-                      websiteUrl={toTool?.website_url}
-                    />
-                  </div>
-                  {sw.category && (
-                    <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{sw.category}</p>
-                  )}
-                  <h3 className="font-bold text-lg mb-3 group-hover:text-primary transition-colors leading-tight">
-                    {sw.headline || `Switch from ${fromTool?.name || sw.from_tool_slug} to ${toTool?.name || sw.to_tool_slug}`}
-                  </h3>
-                  {sw.annual_saving && (
-                    <div className="mb-3">
-                      <span className="text-2xl font-bold text-primary">{sw.annual_saving}</span>
-                      <span className="text-xs text-muted-foreground ml-2">annual saving</span>
+                <div className="p-6 flex flex-col gap-3">
+                  {/* Icons + category row */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ToolIcon
+                        slug={sw.from_tool_slug}
+                        name={fromTool?.name || sw.from_tool_slug}
+                        size="sm"
+                        websiteUrl={fromTool?.website_url}
+                      />
+                      <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                      <ToolIcon
+                        slug={sw.to_tool_slug}
+                        name={toTool?.name || sw.to_tool_slug}
+                        size="sm"
+                        websiteUrl={toTool?.website_url}
+                      />
                     </div>
+                    {sw.category && (
+                      <span className="text-xs font-semibold text-primary uppercase tracking-wider">{sw.category}</span>
+                    )}
+                  </div>
+
+                  {/* Title — tool names only */}
+                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors leading-tight">
+                    {fromTool?.name || sw.from_tool_slug} → {toTool?.name || sw.to_tool_slug}
+                  </h3>
+
+                  {/* Annual saving pill */}
+                  {sw.annual_saving && (
+                    <span className="self-start inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-semibold rounded-full px-3 py-1">
+                      Save {sw.annual_saving}/yr
+                    </span>
                   )}
+
+                  {/* Description */}
                   {sw.intro && (
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">{sw.intro}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{sw.intro}</p>
                   )}
-                  <span className="text-xs font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                  <span className="text-xs font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-auto pt-1">
                     Read guide <ArrowRight className="w-3 h-3" />
                   </span>
                 </div>

@@ -384,7 +384,7 @@ const SWITCH_HUBSPOT_TO_PIPEDRIVE = {
   category: 'Sales · CRM · Migration',
   headline: 'Switch from HubSpot to Pipedrive',
   intro:
-    "Most teams using HubSpot Sales Hub Pro are paying for features they never touch. If your team lives in the pipeline and not the marketing automation, switching to Pipedrive saves around US$4,260 a year for a team of five. This guide covers the real cost difference, what you keep, what you lose and whether you should actually switch.",
+    "Most HubSpot Sales Hub Pro teams are paying for features they never touch — Pipedrive gives you the same pipeline at less than half the cost",
   quick_summary: {
     annual_saving: 'US$4,260 for a 5-person team',
     migration_time: '4 to 8 hours',
@@ -571,7 +571,7 @@ const SWITCH_MAILCHIMP_TO_LOOPS = {
   category: 'Email · Marketing · Migration',
   headline: 'Switch from Mailchimp to Loops',
   intro:
-    "Mailchimp's pricing climbs fast as your list grows. Loops is the modern email tool that founders and creators are switching to. Cleaner UI. Honest pricing. Better deliverability. This guide covers the real cost difference, what you keep, what you lose and whether you should switch.",
+    "Mailchimp's pricing climbs fast as your list grows — Loops gives you a cleaner interface and honest subscriber-based pricing",
   quick_summary: {
     annual_saving: 'US$1,200 for a 5,000-list newsletter',
     migration_time: '2 to 4 hours',
@@ -753,7 +753,7 @@ const SWITCH_CALENDLY_TO_CAL_COM = {
   category: 'Scheduling · Productivity · Migration',
   headline: 'Switch from Calendly to Cal.com',
   intro:
-    "Calendly's free tier is restrictive. Their paid tiers scale up fast as your team grows. Cal.com is the open-source alternative with a more generous free plan and modern UI. This guide covers the real cost difference, what you keep, what you lose and whether you should switch.",
+    "Calendly's paid tiers scale up quickly as your team grows — Cal.com gives you the same scheduling with a more generous free plan and no lock-in",
   quick_summary: {
     annual_saving: 'US$720 for a 5-person team',
     migration_time: '1 to 2 hours',
