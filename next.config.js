@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['img.logo.dev'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.logo.dev',
+      },
+    ],
   },
   turbopack: {},
   // Suppress build warnings for packages with optional browser APIs
