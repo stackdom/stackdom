@@ -232,9 +232,13 @@ export default async function SwitchDetail({ params }) {
       )}
 
       {/* 5. Cost comparison */}
-      {sw.cost_rows?.length > 0 && (
+      {(sw.cost_rows?.length > 0 || sw.cost_intro) && (
         <div className="mb-10">
           {sectionTag('The cost difference')}
+          {sw.cost_intro && (
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">{sw.cost_intro}</p>
+          )}
+          {sw.cost_rows?.length > 0 && (
           <div className="rounded-2xl border border-border overflow-hidden">
             <table className="w-full">
               <thead>
@@ -257,6 +261,7 @@ export default async function SwitchDetail({ params }) {
               </tbody>
             </table>
           </div>
+          )}
           {sw.cost_footnote && (
             <p className="text-xs text-muted-foreground mt-3">{sw.cost_footnote}</p>
           )}
@@ -324,9 +329,13 @@ export default async function SwitchDetail({ params }) {
       )}
 
       {/* 7. Migration time */}
-      {sw.migration_time_items?.length > 0 && (
+      {(sw.migration_time_items?.length > 0 || sw.migration_time_intro) && (
         <div className="mb-10">
           {sectionTag('Migration time')}
+          {sw.migration_time_intro && (
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">{sw.migration_time_intro}</p>
+          )}
+          {sw.migration_time_items?.length > 0 && (
           <div className="rounded-2xl border border-border overflow-hidden">
             <table className="w-full">
               <thead>
@@ -351,6 +360,10 @@ export default async function SwitchDetail({ params }) {
               </tbody>
             </table>
           </div>
+          )}
+          {sw.migration_time_notes && (
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">{sw.migration_time_notes}</p>
+          )}
         </div>
       )}
 

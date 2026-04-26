@@ -241,6 +241,7 @@ const SWITCH_DETAIL_FIELDS = `
   quick_summary,
   why_switch,
   why_stay,
+  cost_intro,
   cost_rows[] {
     label,
     from_value,
@@ -251,11 +252,13 @@ const SWITCH_DETAIL_FIELDS = `
   what_you_keep,
   what_you_lose,
   what_you_gain,
+  migration_time_intro,
   migration_time_items[] {
     label,
     duration
   },
   migration_time_total,
+  migration_time_notes,
   steps[] {
     title,
     body

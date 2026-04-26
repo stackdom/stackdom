@@ -77,6 +77,12 @@ export default defineType({
 
     // === Cost comparison table ===
     defineField({
+      name: 'cost_intro',
+      title: 'Cost Comparison Intro',
+      type: 'text',
+      description: 'Optional paragraph above the cost table',
+    }),
+    defineField({
       name: 'cost_rows',
       title: 'Cost Comparison Rows',
       type: 'array',
@@ -116,6 +122,12 @@ export default defineType({
 
     // === Migration time block ===
     defineField({
+      name: 'migration_time_intro',
+      title: 'Migration Time Intro',
+      type: 'text',
+      description: 'Optional paragraph above the migration time table',
+    }),
+    defineField({
       name: 'migration_time_items',
       title: 'Migration Time Line Items',
       type: 'array',
@@ -130,6 +142,12 @@ export default defineType({
       ],
     }),
     defineField({ name: 'migration_time_total', title: 'Migration Time Total', type: 'string' }),
+    defineField({
+      name: 'migration_time_notes',
+      title: 'Migration Time Notes',
+      type: 'text',
+      description: 'Optional paragraph below the migration time total',
+    }),
 
     // === Step-by-step guide (markdown bodies, rendered via react-markdown) ===
     defineField({
