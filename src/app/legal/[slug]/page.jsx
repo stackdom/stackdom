@@ -1,14 +1,38 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { getLegalPage } from '@/lib/sanity';
+import { getLegalPage, getAllLegalSlugs } from '@/lib/sanity';
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const slugs = await getAllLegalSlugs();
+  return slugs.map((s) => ({ slug: s.slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const page = await getLegalPage(slug);
+  if (!page) return {};
+
+  const title = `${page.title} | Stackdom`;
+  const description = `${page.title} for Stackdom.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://stackdom.com/legal/${slug}`,
+      type: 'article',
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
 function renderMarkdown(text) {
-  const paragraphs = text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+  const paragraphs = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
   return paragraphs.map((para, i) => {
     if (para.startsWith('## ')) {
       return (
@@ -25,7 +49,7 @@ function renderMarkdown(text) {
       );
     }
     const lines = para.split('\n');
-    if (lines.every(l => l.trimStart().startsWith('- '))) {
+    if (lines.every((l) => l.trimStart().startsWith('- '))) {
       return (
         <ul key={i} className="list-disc list-inside space-y-1.5 text-muted-foreground text-sm leading-relaxed mb-1">
           {lines.map((l, j) => (
@@ -47,34 +71,11 @@ function renderMarkdown(text) {
   });
 }
 
-export default function LegalPage() {
-  const { slug } = useParams();
-  const [page, setPage] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default async function LegalPage({ params }) {
+  const { slug } = await params;
+  const page = await getLegalPage(slug);
 
-  useEffect(() => {
-    getLegalPage(slug).then(result => {
-      setPage(result || null);
-      setLoading(false);
-    });
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!page) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Page not found</h1>
-        <Link href="/"><Button variant="outline">Back to home</Button></Link>
-      </div>
-    );
-  }
+  if (!page) notFound();
 
   const formattedDate = page.lastUpdated
     ? new Date(page.lastUpdated).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })

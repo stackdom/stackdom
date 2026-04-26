@@ -1,75 +1,58 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, DollarSign, Check, RefreshCw, ExternalLink, X, Users, Lightbulb, AlertTriangle, Clock, Zap, ChevronDown, ChevronUp } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, ArrowRight, DollarSign, Check, RefreshCw, ExternalLink, X, Users, Lightbulb, AlertTriangle, Clock, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getStackBySlug, getAllTools, getAllStacks } from '@/lib/sanity';
 import ToolIcon from '@/components/ToolIcon';
+import FAQAccordion from './FAQAccordion';
 
-function FAQ({ question, answer }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-border rounded-xl overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium hover:bg-muted/40 transition-colors"
-      >
-        <span>{question}</span>
-        {open ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
-      </button>
-      {open && (
-        <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-border bg-muted/20">
-          <p className="pt-3">{answer}</p>
-        </div>
-      )}
-    </div>
-  );
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const stacks = await getAllStacks();
+  return stacks.map((s) => ({ slug: s.slug }));
 }
 
-export default function StackDetail() {
-  const { slug } = useParams();
-  const [stack, setStack] = useState(null);
-  const [tools, setTools] = useState([]);
-  const [relatedStacks, setRelatedStacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const stack = await getStackBySlug(slug);
+  if (!stack) return {};
 
-  useEffect(() => {
-    Promise.all([
-      getStackBySlug(slug),
-      getAllTools(),
-    ]).then(([found, allTools]) => {
-      setStack(found || null);
-      setTools(allTools);
-      if (found) {
-        getAllStacks().then(allStacks => {
-          setRelatedStacks(allStacks.filter(s => s.business_type === found.business_type && s.slug !== found.slug));
-        });
-      }
-      setLoading(false);
-    });
-  }, [slug]);
+  const title = `${stack.name} — ${stack.business_type} Stack | Stackdom`;
+  const description =
+    stack.quick_summary ||
+    stack.description ||
+    `${stack.name} is a curated stack of tools for ${stack.business_type?.toLowerCase()} businesses.`;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://stackdom.com/stacks/${slug}`,
+      type: 'website',
+      images: [{ url: '/og-default.png', width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
 
-  if (!stack) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Stack not found</h1>
-        <Link href="/stacks"><Button variant="outline">Back to stacks</Button></Link>
-      </div>
-    );
-  }
+export default async function StackDetail({ params }) {
+  const { slug } = await params;
 
-  const stackTools = (stack.tools || []).map(name => tools.find(t => t.name === name)).filter(Boolean);
+  const [stack, tools, allStacks] = await Promise.all([
+    getStackBySlug(slug),
+    getAllTools(),
+    getAllStacks(),
+  ]);
+
+  if (!stack) notFound();
+
+  const relatedStacks = allStacks.filter((s) => s.business_type === stack.business_type && s.slug !== stack.slug);
+
+  const stackTools = (stack.tools || []).map((name) => tools.find((t) => t.name === name)).filter(Boolean);
   const toolsWithPrice = stackTools.filter(t => t.monthly_price != null);
   const totalCost = toolsWithPrice.reduce((sum, t) => sum + t.monthly_price, 0);
 
@@ -322,11 +305,7 @@ export default function StackDetail() {
       {stack.faqs?.length > 0 && (
         <div className="mb-12 rounded-2xl bg-muted/40 px-7 py-6">
           <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
-          <div className="space-y-2">
-            {stack.faqs.map((faq, i) => (
-              <FAQ key={i} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
+          <FAQAccordion faqs={stack.faqs} />
         </div>
       )}
 

@@ -1,9 +1,5 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrendingUp, Search, MousePointerClick, DollarSign, Users, Zap, Globe, Mail, BarChart2, CreditCard, Headphones, PenLine, ArrowRight } from 'lucide-react';
-import { getAllStacks } from '@/lib/sanity';
 
 const GRADIENTS = [
   'from-green-400 to-blue-500',
@@ -28,7 +24,7 @@ export const GOALS = [
   { slug: 'content', title: 'Create content', description: 'Design, write, and publish faster', icon: PenLine, tools: ['Canva', 'Notion', 'WordPress'] },
 ];
 
-const GOAL_SLUGS = GOALS.map(g => g.slug);
+export const GOAL_SLUGS = GOALS.map((g) => g.slug);
 
 const iconMap = {
   traffic: TrendingUp, generateleads: Search, captureleads: MousePointerClick,
@@ -37,21 +33,8 @@ const iconMap = {
   payments: CreditCard, support: Headphones, content: PenLine,
 };
 
-export default function GoalStackGrid() {
-  const [goals, setGoals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getAllStacks().then(data => {
-      const goalStacks = data.filter(s => GOAL_SLUGS.includes(s.slug));
-      setGoals(goalStacks);
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
-    });
-  }, []);
-
-  if (loading) return null;
+export default function GoalStackGrid({ goals = [] }) {
+  if (goals.length === 0) return null;
 
   return (
     <section className="py-20 sm:py-28 bg-muted/30">
@@ -77,7 +60,7 @@ export default function GoalStackGrid() {
                   <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{goal.name}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-2">{goal.description}</p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {(goal.tools || []).slice(0, 5).map(t => (
+                    {(goal.tools || []).slice(0, 5).map((t) => (
                       <span key={t} className="px-3 py-1 text-xs border border-border rounded-full text-foreground bg-background">{t}</span>
                     ))}
                     {(goal.tools || []).length > 5 && (

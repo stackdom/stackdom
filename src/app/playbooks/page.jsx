@@ -1,6 +1,3 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,24 +5,27 @@ import { getAllPlaybooks } from '@/lib/sanity';
 import SectionHeading from '@/components/SectionHeading';
 import PlaybookCard from '@/components/PlaybookCard';
 
-export default function Playbooks() {
-  const [playbooks, setPlaybooks] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const revalidate = 3600;
 
-  useEffect(() => {
-    getAllPlaybooks().then(data => {
-      setPlaybooks(data);
-      setLoading(false);
-    });
-  }, []);
+export const metadata = {
+  title: 'Playbooks — Step-by-Step Growth Guides | Stackdom',
+  description: 'Actionable playbooks that connect tools into real business outcomes. No fluff, just practical advice you can implement today.',
+  openGraph: {
+    title: 'Playbooks — Step-by-Step Growth Guides | Stackdom',
+    description: 'Actionable playbooks that connect tools into real business outcomes. No fluff, just practical advice.',
+    url: 'https://stackdom.com/playbooks',
+    type: 'website',
+    images: [{ url: '/og-default.png', width: 1200, height: 630, alt: 'Stackdom Playbooks' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Playbooks — Step-by-Step Growth Guides | Stackdom',
+    description: 'Actionable playbooks that connect tools into real business outcomes.',
+  },
+};
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
+export default async function Playbooks() {
+  const playbooks = await getAllPlaybooks();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -35,7 +35,7 @@ export default function Playbooks() {
         description="Step-by-step playbooks that connect tools into real business outcomes. No fluff, just practical advice."
       />
       <div className="grid md:grid-cols-2 gap-6">
-        {playbooks.map(p => (
+        {playbooks.map((p) => (
           <PlaybookCard key={p.id} playbook={p} />
         ))}
       </div>

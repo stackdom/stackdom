@@ -1,50 +1,55 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, BookOpen, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ReactMarkdown from 'react-markdown';
-import { getPlaybookBySlug, getAllTools } from '@/lib/sanity';
+import { getPlaybookBySlug, getAllPlaybooks, getAllTools } from '@/lib/sanity';
 import ToolIcon from '@/components/ToolIcon';
 
-export default function PlaybookDetail() {
-  const { slug } = useParams();
-  const [playbook, setPlaybook] = useState(null);
-  const [tools, setTools] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const revalidate = 3600;
 
-  useEffect(() => {
-    Promise.all([
-      getPlaybookBySlug(slug),
-      getAllTools(),
-    ]).then(([found, allTools]) => {
-      setPlaybook(found || null);
-      setTools(allTools);
-      setLoading(false);
-    });
-  }, [slug]);
+export async function generateStaticParams() {
+  const playbooks = await getAllPlaybooks();
+  return playbooks.map((p) => ({ slug: p.slug }));
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const playbook = await getPlaybookBySlug(slug);
+  if (!playbook) return {};
 
-  if (!playbook) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Playbook not found</h1>
-        <Link href="/playbooks"><Button variant="outline">Back to playbooks</Button></Link>
-      </div>
-    );
-  }
+  const title = `${playbook.title} | Stackdom Playbook`;
+  const description =
+    playbook.problem ||
+    playbook.solution ||
+    `Step-by-step playbook: ${playbook.title}. Tool stack and implementation guide.`;
 
-  const relatedTools = (playbook.tools || []).map(name => tools.find(t => t.name === name)).filter(Boolean);
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://stackdom.com/playbooks/${slug}`,
+      type: 'article',
+      images: [{ url: '/og-default.png', width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  };
+}
+
+export default async function PlaybookDetail({ params }) {
+  const { slug } = await params;
+
+  const [playbook, tools] = await Promise.all([
+    getPlaybookBySlug(slug),
+    getAllTools(),
+  ]);
+
+  if (!playbook) notFound();
+
+  const relatedTools = (playbook.tools || []).map((name) => tools.find((t) => t.name === name)).filter(Boolean);
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -76,7 +81,7 @@ export default function PlaybookDetail() {
         <div className="mb-10">
           <h2 className="text-xl font-semibold mb-6">Recommended stack</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {relatedTools.map(tool => (
+            {relatedTools.map((tool) => (
               <div key={tool.id} className="p-5 rounded-2xl border border-border bg-card flex flex-col gap-3">
                 <ToolIcon slug={tool.slug} name={tool.name} size="md" />
                 <div className="flex-1">

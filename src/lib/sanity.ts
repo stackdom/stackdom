@@ -225,6 +225,12 @@ export async function getSiteSettings() {
 }
 
 // Legal pages
+export async function getAllLegalSlugs() {
+  return client.fetch(
+    `*[_type == "legalPage" && defined(slug.current)]{ "slug": slug.current }`
+  );
+}
+
 export async function getLegalPage(slug: string) {
   return client.fetch(
     `*[_type == "legalPage" && (slug.current == $slug || slug == $slug)][0] {
