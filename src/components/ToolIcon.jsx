@@ -31,6 +31,8 @@ const TOOL_DOMAINS = {
   'convertkit': 'convertkit.com',
   'typeform': 'typeform.com',
   'calendly': 'calendly.com',
+  'cal-com': 'cal.com',
+  'loops': 'loops.so',
   'loom': 'loom.com',
   'zoom': 'zoom.us',
   'google-workspace': 'workspace.google.com',

@@ -55,6 +55,7 @@ const client = createClient({
 const LOOPS = {
   slug: { _type: 'slug', current: 'loops' },
   name: 'Loops',
+  short_description: 'Modern email for SaaS. Transactional and marketing email in one place, with honest pricing.',
   category: 'Email',
   tagline: 'The email platform built for SaaS',
   website_url: 'https://loops.so',
@@ -165,6 +166,7 @@ const LOOPS = {
 const CAL_COM = {
   slug: { _type: 'slug', current: 'cal-com' },
   name: 'Cal.com',
+  short_description: 'Open-source scheduling with unlimited bookings on the free tier. Self-host or use the cloud.',
   category: 'Scheduling',
   tagline: 'Open-source scheduling for individuals and teams',
   website_url: 'https://cal.com',
@@ -274,6 +276,7 @@ const CAL_COM = {
 const CALENDLY = {
   slug: { _type: 'slug', current: 'calendly' },
   name: 'Calendly',
+  short_description: 'The default scheduling tool for sales teams with deep CRM integrations.',
   category: 'Scheduling',
   tagline: 'The default scheduling tool for sales teams',
   website_url: 'https://calendly.com',
