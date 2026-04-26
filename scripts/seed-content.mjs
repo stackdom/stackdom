@@ -384,7 +384,7 @@ const SWITCH_HUBSPOT_TO_PIPEDRIVE = {
   category: 'Sales · CRM · Migration',
   headline: 'Switch from HubSpot to Pipedrive',
   intro:
-    "Most HubSpot Sales Hub Pro teams are paying for features they never touch — Pipedrive gives you the same pipeline at less than half the cost",
+    "Pipedrive gives sales teams everything they actually use in HubSpot at less than half the price",
   quick_summary: {
     annual_saving: 'US$4,260 for a 5-person team',
     migration_time: '4 to 8 hours',
@@ -571,7 +571,7 @@ const SWITCH_MAILCHIMP_TO_LOOPS = {
   category: 'Email · Marketing · Migration',
   headline: 'Switch from Mailchimp to Loops',
   intro:
-    "Mailchimp's pricing climbs fast as your list grows — Loops gives you a cleaner interface and honest subscriber-based pricing",
+    "Loops gives you a better editor and honest pricing so you stop paying more every time your list grows",
   quick_summary: {
     annual_saving: 'US$1,200 for a 5,000-list newsletter',
     migration_time: '2 to 4 hours',
@@ -753,7 +753,7 @@ const SWITCH_CALENDLY_TO_CAL_COM = {
   category: 'Scheduling · Productivity · Migration',
   headline: 'Switch from Calendly to Cal.com',
   intro:
-    "Calendly's paid tiers scale up quickly as your team grows — Cal.com gives you the same scheduling with a more generous free plan and no lock-in",
+    "Cal.com covers the same core scheduling as Calendly without the rising costs as your team grows",
   quick_summary: {
     annual_saving: 'US$720 for a 5-person team',
     migration_time: '1 to 2 hours',
