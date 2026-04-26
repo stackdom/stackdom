@@ -1,33 +1,44 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Check, X, ExternalLink, ArrowRight, ChevronDown, ChevronUp, Layers, Users, Lightbulb, AlertTriangle } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, Check, X, ExternalLink, ArrowRight, Layers, Users, Lightbulb, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getToolBySlug, getAllTools, getAllStacks, getAllComparisons } from '@/lib/sanity';
 import ToolCard from '@/components/ToolCard';
 import ToolIcon from '@/components/ToolIcon';
+import FAQAccordion from './FAQAccordion';
 
-function FAQ({ question, answer }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-border rounded-xl overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium hover:bg-muted/40 transition-colors"
-      >
-        <span>{question}</span>
-        {open ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
-      </button>
-      {open && (
-        <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-border bg-muted/20">
-          <p className="pt-3">{answer}</p>
-        </div>
-      )}
-    </div>
-  );
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const tools = await getAllTools();
+  return tools.map((t) => ({ slug: t.slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const tool = await getToolBySlug(slug);
+  if (!tool) return {};
+
+  const title = `${tool.name} Review — ${tool.category} Tool | Stackdom`;
+  const description =
+    tool.quick_summary ||
+    tool.tagline ||
+    tool.short_description ||
+    `${tool.name} is a ${tool.category} tool. Pricing, pros, cons and alternatives.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://stackdom.com/tools/${slug}`,
+      type: 'website',
+      images: [{ url: '/og-default.png', width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  };
 }
 
 function StackFitBlock({ text }) {
@@ -45,56 +56,27 @@ function StackFitBlock({ text }) {
   );
 }
 
-export default function ToolDetail() {
-  const { slug } = useParams();
-  const [tool, setTool] = useState(null);
-  const [relatedTools, setRelatedTools] = useState([]);
-  const [containingStacks, setContainingStacks] = useState([]);
-  const [comparisons, setComparisons] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default async function ToolDetail({ params }) {
+  const { slug } = await params;
 
-  useEffect(() => {
-    Promise.all([
-      getToolBySlug(slug),
-      getAllTools(),
-      getAllStacks(),
-      getAllComparisons(),
-    ]).then(([found, allTools, allStacks, allComparisons]) => {
-      setTool(found || null);
-      if (found) {
-        const others = allTools.filter(t => t.category === found.category && t.id !== found.id);
-        setRelatedTools(others);
-        const toolMap = Object.fromEntries(allTools.map(t => [t.slug, t]));
-        setComparisons(
-          allComparisons
-            .filter(c => c.tool_a_slug === found.slug || c.tool_b_slug === found.slug)
-            .map(c => {
-              const otherSlug = c.tool_a_slug === found.slug ? c.tool_b_slug : c.tool_a_slug;
-              return { id: c.id, compSlug: c.slug, otherTool: toolMap[otherSlug] || { name: otherSlug } };
-            })
-        );
-        setContainingStacks(allStacks.filter(s => (s.tools || []).includes(found.name)));
-      }
-      setLoading(false);
+  const [tool, allTools, allStacks, allComparisons] = await Promise.all([
+    getToolBySlug(slug),
+    getAllTools(),
+    getAllStacks(),
+    getAllComparisons(),
+  ]);
+
+  if (!tool) notFound();
+
+  const relatedTools = allTools.filter((t) => t.category === tool.category && t.id !== tool.id);
+  const toolMap = Object.fromEntries(allTools.map((t) => [t.slug, t]));
+  const comparisons = allComparisons
+    .filter((c) => c.tool_a_slug === tool.slug || c.tool_b_slug === tool.slug)
+    .map((c) => {
+      const otherSlug = c.tool_a_slug === tool.slug ? c.tool_b_slug : c.tool_a_slug;
+      return { id: c.id, compSlug: c.slug, otherTool: toolMap[otherSlug] || { name: otherSlug } };
     });
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!tool) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Tool not found</h1>
-        <Link href="/tools"><Button variant="outline">Back to tools</Button></Link>
-      </div>
-    );
-  }
+  const containingStacks = allStacks.filter((s) => (s.tools || []).includes(tool.name));
 
   const softwareSchema = {
     '@context': 'https://schema.org',
@@ -400,11 +382,7 @@ export default function ToolDetail() {
         {tool.faqs?.length > 0 && (
           <div className="rounded-2xl bg-muted/40 px-7 py-6">
             <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-2">
-              {tool.faqs.map((faq, i) => (
-                <FAQ key={i} question={faq.question} answer={faq.answer} />
-              ))}
-            </div>
+            <FAQAccordion faqs={tool.faqs} />
           </div>
         )}
 
