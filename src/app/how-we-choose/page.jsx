@@ -311,7 +311,7 @@ export default async function HowWeChoose() {
               </Button>
             </Link>
             <Link href="/stacks">
-              <Button size="lg" variant="outline" className="rounded-full px-8 text-base h-12 border-background/20 text-background hover:bg-background/10">
+              <Button size="lg" variant="outline" className="rounded-full px-8 text-base h-12 bg-transparent border-background/40 text-background hover:bg-background/10 hover:text-background">
                 Browse stacks
               </Button>
             </Link>
