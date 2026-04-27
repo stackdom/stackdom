@@ -44,6 +44,7 @@ export default function Footer() {
             <h4 className="font-semibold text-sm mb-4 opacity-80">Resources</h4>
             <div className="space-y-2.5">
               <Link href="/about" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">About</Link>
+              <Link href="/how-we-choose" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">How we choose</Link>
               <Link href="/contact" className="block text-sm opacity-60 hover:opacity-100 transition-opacity">Contact</Link>
             </div>
           </div>

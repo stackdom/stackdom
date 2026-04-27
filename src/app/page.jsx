@@ -103,6 +103,13 @@ export default async function Home() {
               </div>
             ))}
           </div>
+          <div className="text-center mt-10">
+            <Link href="/how-we-choose">
+              <Button variant="outline" className="rounded-full px-6">
+                Read our methodology <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
